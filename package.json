@@ -1,0 +1,21 @@
+{
+  "name": "nula-extractor",
+  "version": "1.0.0",
+  "description": "NodeJS port of NULAExtractor which is part of NULASpider. Use to extractor datas for spider.",
+  "author": "LiesAuer",
+  "license": "MIT",
+  "dependencies": {
+    "@gorillastack/jmespath": "^1.3.0",
+    "cheerio": "^1.0.0-rc.3",
+    "jsdom": "^16.2.2",
+    "jsonpath-plus": "^4.0.0",
+    "xpath-ts": "^1.3.13"
+  },
+  "devDependencies": {
+    "@types/cheerio": "^0.22.16",
+    "@types/jsdom": "^16.2.0",
+    "@types/node": "^13.11.0",
+    "parse5": "^7.1.2",
+    "typescript": "^4.9.5"
+  }
+}
