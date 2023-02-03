@@ -15,7 +15,7 @@ export function simpleCloneDeep<T = any>(data: T): T {
     return data;
 }
 
-export function isEmptyObject(obj: object | any[]) {
+export function isEmpty(obj: object | any[]) {
     if (!obj) return true;
 
     if (Array.isArray(obj)) return obj.length == 0;

@@ -1,4 +1,3 @@
-import { Dictionary } from './Nsr/Foundation/Dictionary';
 import { DumpExporter } from './Exporter/DumpExporter';
 import { IExporter } from './Exporter/IExporter';
 import { NullExporter } from './Exporter/NullExporter';
@@ -10,8 +9,11 @@ import { RawExtractor } from './Extractor/RawExtractor';
 import { RegexExtractor } from './Extractor/RegexExtractor';
 import { TextExtractor } from './Extractor/TextExtractor';
 import { XPathExtractor } from './Extractor/XPathExtractor';
-import { UrlMatch } from './UrlMatch';
-import { simpleCloneDeep, isEmptyObject } from './Util';
+import { simpleCloneDeep, isEmpty } from './Util';
+
+export type Dictionary<T = any> = {
+    [index: string]: T,
+}
 
 export type Config = {
     /**
@@ -27,6 +29,14 @@ export type Config = {
 export type ExportConfig = {
     name: string;
 }
+
+export type UrlAbsoluteMatch = string
+
+export type UrlRegexMatch = RegExp
+
+export type UrlCallbackMatch = (url: string) => boolean
+
+export type UrlMatch = UrlAbsoluteMatch | UrlRegexMatch | UrlCallbackMatch
 
 export type Field = Dictionary<Query>
 
@@ -71,7 +81,7 @@ export class Extractor<I = string, O = Dictionary<any>> {
         this.config = simpleCloneDeep(config);
 
         for (const key in defaultConfig) {
-            if (isEmptyObject(this.config[key])) {
+            if (this.config[key] === undefined || (typeof this.config[key] == 'object' && isEmpty(this.config[key]))) {
                 this.config[key] = defaultConfig[key];
             }
         }
@@ -168,7 +178,7 @@ export class Extractor<I = string, O = Dictionary<any>> {
         return extractor.extractAll(selector, content);
     }
 
-    private fetchFields(fields: Field, content: I, level = 0): O {
+    private fetchFields(content: I, fields?: Field, level = 0): O {
         let result: O = <any>{};
 
         let recursiveResult: Dictionary<{
@@ -250,12 +260,12 @@ export class Extractor<I = string, O = Dictionary<any>> {
                         const newField = [];
                         for (const item of field) {
                             let newItem = item;
-                            if (item && query.fields && (this.config.maxNestedLevel == -1 || level < this.config.maxNestedLevel)) {
-                                newItem = this.fetchFields(query.fields, item, level + 1);
+                            if (item && query.fields && (this.config.maxNestedLevel == -1 || level <= this.config.maxNestedLevel)) {
+                                newItem = this.fetchFields(item, query.fields, level + 1);
                             }
 
                             let recursiveField = null;
-                            if (item && query.recursive && (this.config.maxNestedLevel == -1 || level + 1 < this.config.maxNestedLevel)) {
+                            if (item && query.recursive && (this.config.maxNestedLevel == -1 || level + 1 <= this.config.maxNestedLevel)) {
                                 if (!newItem) newItem = {};
                                 const recursiveQuery = query;
                                 for (const key in query) {
@@ -263,9 +273,9 @@ export class Extractor<I = string, O = Dictionary<any>> {
                                 }
                                 recursiveQuery.areaType = null; 
                                 recursiveQuery.area = null;
-                                recursiveField = this.fetchFields({
+                                recursiveField = this.fetchFields(item, {
                                     [name]: recursiveQuery,
-                                }, item, level + 1)[name];
+                                }, level + 1)[name];
                             }
 
                             if (query.callback) {
@@ -282,12 +292,12 @@ export class Extractor<I = string, O = Dictionary<any>> {
 
                         const rawField = field;
 
-                        if (rawField && query.fields && (this.config.maxNestedLevel == -1 || level < this.config.maxNestedLevel)) {
-                            field = this.fetchFields(query.fields, rawField, level + 1);
+                        if (rawField && query.fields && (this.config.maxNestedLevel == -1 || level <= this.config.maxNestedLevel)) {
+                            field = this.fetchFields(rawField, query.fields, level + 1);
                         }
 
                         let recursiveField = null;
-                        if (rawField && query.recursive && (this.config.maxNestedLevel == -1 || level + 1 < this.config.maxNestedLevel)) {
+                        if (rawField && query.recursive && (this.config.maxNestedLevel == -1 || level + 1 <= this.config.maxNestedLevel)) {
                             if (!field) field = {};
                             const recursiveQuery = query;
                             for (const key in query) {
@@ -295,9 +305,9 @@ export class Extractor<I = string, O = Dictionary<any>> {
                             }
                             recursiveQuery.areaType = null;
                             recursiveQuery.area = null;
-                            recursiveField = this.fetchFields({
+                            recursiveField = this.fetchFields(rawField, {
                                 [name]: recursiveQuery,
-                            }, rawField, level + 1)[name];
+                            }, level + 1)[name];
                         }
                         if (rawField && query.callback) {
                             field = query.callback(field);
@@ -311,7 +321,7 @@ export class Extractor<I = string, O = Dictionary<any>> {
             }
         }
 
-        if (result && !isEmptyObject(recursiveResult)) {
+        if (result && !isEmpty(recursiveResult)) {
             for (const name in recursiveResult) {
                 let oResult = result[name];
                 const rResult = recursiveResult[name];
@@ -337,8 +347,8 @@ export class Extractor<I = string, O = Dictionary<any>> {
         return this.fetchRepeatedField('css', 'a[href] @href', content as any) as any[];
     }
 
-    public extract(fields: Field, content: I): O {
-        return this.fetchFields(fields, content);
+    public extract(content: I, fields?: Field): O {
+        return this.fetchFields(content, fields || this.config.fields);
     }
 
     public export(data: O, name?: string) {

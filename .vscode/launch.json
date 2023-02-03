@@ -5,31 +5,19 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Launch Test",
             "type": "node",
             "request": "launch",
-            "name": "Launch index.js",
-            "preLaunchTask": "build",
-            "skipFiles": [
-                "<node_internals>/**"
+            "args": [
+                "${workspaceRoot}/test/test.ts"
             ],
-            "program": "${workspaceFolder}/dist/index.js",
-            "outFiles": [
-                "${workspaceFolder}/**/*.js"
+            "runtimeArgs": [
+              "--nolazy",
+              "-r",
+              "ts-node/register"
             ],
-            "internalConsoleOptions": "openOnSessionStart"
-        },
-        {
-            "type": "node",
-            "request": "launch",
-            "name": "Launch Current Script",
-            "preLaunchTask": "build",
-            "skipFiles": [
-                "<node_internals>/**"
-            ],
-            "program": "${workspaceFolder}/dist/${relativeFileDirname}/${fileBasenameNoExtension}.js",
-            "outFiles": [
-                "${workspaceFolder}/**/*.js"
-            ],
+            "sourceMaps": true,
+            "cwd": "${workspaceRoot}",
             "internalConsoleOptions": "openOnSessionStart"
         }
     ]
