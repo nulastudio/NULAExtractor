@@ -82,12 +82,12 @@ export class TextExtractor implements IExtractor<string, string, string> {
         return { text, position };
     }
 
-    public extractOne(selector: string, content: string) {
+    public extractOne(selector: string | TextSelector, content: string) {
         const sel = this.parseSelector(selector);
         return this.findText(content, sel.leftSearch, sel.rightSearch, sel.searchPosition, sel.option).text;
     }
 
-    public extractAll(selector: string, content: string) {
+    public extractAll(selector: string | TextSelector, content: string) {
         const result: string[] = [];
 
         const sel = this.parseSelector(selector);

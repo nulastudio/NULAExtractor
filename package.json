@@ -1,6 +1,6 @@
 {
   "name": "nula-extractor",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "a extensible, powerful and easy-to-use data extractor for spider.",
   "author": "LiesAuer",
   "license": "MIT",

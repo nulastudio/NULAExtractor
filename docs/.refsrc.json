@@ -1,0 +1,19 @@
+{
+  "title": "NULAExtractor 速查表",
+  "description": "",
+  "keywords": "nulastudio,nulaextractor",
+  "data-info": "👆待完善需要您的参与",
+  "search": {
+    "label": "搜索",
+    "placeholder": "搜索速查表",
+    "cancel": "取消"
+  },
+  "editor": {
+    "label": "编辑",
+    "disabled": true
+  },
+  "github": {
+    "url": "https://github.com/nulastudio/NULAExtractor"
+  },
+  "license": "© 2023 nulastudio, powered by <a target=\"__blank\" href=\"https://github.com/jaywcjlove/reference\">jaywcjlove/reference</a>.<br />"
+}

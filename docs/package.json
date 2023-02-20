@@ -1,0 +1,17 @@
+{
+  "name": "nula-extractor-docs",
+  "version": "1.0.0",
+  "description": "NULAExtractor 速查表",
+  "author": "LiesAuer",
+  "license": "MIT",
+  "scripts": {
+    "build": "refs-cli",
+    "start": "refs-cli --watch"
+  },
+  "devDependencies": {
+    "refs-cli": "^1.3.0"
+  },
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}
