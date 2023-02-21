@@ -5,7 +5,7 @@
   "author": "LiesAuer",
   "license": "MIT",
   "scripts": {
-    "build": "refs-cli",
+    "build": "refs-cli --output ../docs",
     "start": "refs-cli --watch"
   },
   "devDependencies": {
