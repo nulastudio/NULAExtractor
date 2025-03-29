@@ -1,4 +1,4 @@
-import cheerioModule from "cheerio";
+import * as cheerio from 'cheerio';
 import { IExtractor } from "./IExtractor";
 
 export class CSSExtractor implements IExtractor<string, string, string> {
@@ -27,7 +27,7 @@ export class CSSExtractor implements IExtractor<string, string, string> {
     protected queryAction(node: cheerio.Cheerio, action: string) {
         switch (action || '') {
             case 'outerHTML':
-                return cheerioModule.html(node, { decodeEntities: false });
+                return cheerio.html(node, { decodeEntities: false });
             case '':
                 return node.html();
             default:
@@ -38,7 +38,7 @@ export class CSSExtractor implements IExtractor<string, string, string> {
     public extractOne(selector: string, content: string) {
         const nodeAction = this.nodeAction(selector);
 
-        const document = cheerioModule.load(content, { decodeEntities: false });
+        const document = cheerio.load(content, { decodeEntities: false });
 
         let node: cheerio.Cheerio = null;
 
@@ -54,7 +54,7 @@ export class CSSExtractor implements IExtractor<string, string, string> {
     public extractAll(selector: string, content: string) {
         const nodeAction = this.nodeAction(selector);
 
-        const document = cheerioModule.load(content, { decodeEntities: false });
+        const document = cheerio.load(content, { decodeEntities: false });
 
         let nodes = document(nodeAction.node);
 
